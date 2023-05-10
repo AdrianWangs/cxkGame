@@ -172,6 +172,7 @@ public class GamePanel extends JPanel {
         hero.draw(g);
         hero.balls.forEach(ball -> ball.draw(g));
         enemies.forEach(enemy -> enemy.draw(g));
+        props.forEach(prop -> prop.draw(g));
 
     }
 

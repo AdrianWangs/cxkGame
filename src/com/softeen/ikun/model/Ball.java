@@ -3,6 +3,8 @@ package com.softeen.ikun.model;
 import com.softeen.ikun.GamePanel;
 import com.softeen.ikun.tools.Utils;
 
+import java.util.Random;
+
 import static com.softeen.ikun.Config.*;
 
 public class Ball extends Sprite implements Runnable{
@@ -95,9 +97,6 @@ public class Ball extends Sprite implements Runnable{
     public void run() {
 
 
-
-
-
         while (!isDeath()){
             setX(getX() + speed_x);
             setY(getY() + speed_y);
@@ -136,9 +135,20 @@ public class Ball extends Sprite implements Runnable{
 
                 enemy.setHp(enemy.getHp()-10);
                 if (enemy.getHp() <= 0) {
-                    getGamePanel().enemies.remove(enemy);
 
+                    getGamePanel().enemies.remove(enemy);
                     getGamePanel().killCount++;
+
+
+                    int randomInt = Utils.randNum(0, DROP_PROBABILITY);
+
+                    //随机掉落道具
+                    if(randomInt == 1 || randomInt == 0){
+
+                        //随机生成粥和鸡腿
+                        Prop prop = new Prop(getGamePanel(),getX(),getY(),randomInt);
+                        getGamePanel().props.add(prop);
+                    }
 
                 }
                 hero.setMp(hero.getMp()+10);

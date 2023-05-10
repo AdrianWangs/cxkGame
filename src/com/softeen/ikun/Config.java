@@ -1,5 +1,6 @@
 package com.softeen.ikun;
 
+
 import java.awt.*;
 
 public class Config {
@@ -118,6 +119,22 @@ public class Config {
      * 击败多少小兵进入下一关
      */
     public static final int MAX_ENEMY_COUNT = 10;
+
+    /**
+     * 鸡腿加血的值
+     */
+    public static final int CHICKEN_VALUE = 200;
+
+    /**
+     * 汤加蓝的值
+     */
+    public static final int SOUP_VALUE = 50;
+
+
+    /**
+     * 掉落物体的概率
+     */
+    public static final int DROP_PROBABILITY = 3;
 
 
 }

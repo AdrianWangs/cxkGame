@@ -59,8 +59,10 @@ public class Enemy extends Sprite implements Runnable{
 
 
     public Enemy(GamePanel gamePanel, CopyOnWriteArrayList<Enemy> enemies) {
+
         super(gamePanel);
         this.enemies = enemies;
+
     }
 
     @Override

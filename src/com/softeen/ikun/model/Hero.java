@@ -329,6 +329,33 @@ public class Hero extends Sprite {
                 break;
 
         }
+
+        getGamePanel().props.forEach(prop ->{
+
+
+            //吃药
+            if (prop.isCollision(this)){
+
+                switch (prop.type){
+                    case 0:
+                        //鸡腿加血
+                        this.setHp(getHp() + CHICKEN_VALUE);
+                        break;
+
+                    case 1:
+                        //汤加蓝
+                        this.setMp(getMp() + SOUP_VALUE);
+                        break;
+
+                }
+
+                getGamePanel().props.remove(prop);
+
+            }
+
+        });
+
+
     }
 
     /**
