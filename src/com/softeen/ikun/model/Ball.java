@@ -94,9 +94,17 @@ public class Ball extends Sprite implements Runnable{
     @Override
     public void run() {
 
+
+
+
+
         while (!isDeath()){
             setX(getX() + speed_x);
             setY(getY() + speed_y);
+
+
+            onCollision();
+
 
             if (getX() < getWidth() || getX() > FRAME_WIDTH){
                 setDeath(true);
@@ -118,19 +126,37 @@ public class Ball extends Sprite implements Runnable{
     }
 
 
+    public void onCollision(){
+        getGamePanel().enemies.forEach(enemy -> {
+            if (this.isCollision(enemy)) {
+
+                System.out.println("ball"+enemy.getX()+" "+enemy.getY()+" "+enemy.getImg().getWidth()+" "+enemy.getImg().getHeight());
+
+                //击退敌人
+                this.knockBack(enemy);
+                setDeath(true);
+
+                //TODO: 击中敌人
+                enemy.setHp(enemy.getHp()-10);
+                if (enemy.getHp() <= 0) {
+                    getGamePanel().enemies.remove(enemy);
+                }
+                hero.setMp(hero.getMp()+10);
+            }
+        });
+    }
+
+
     /**
      * 击退敌人
      */
     public void knockBack(Enemy enemy) {
 
-        // 计算击退距离
-        int distance = ATTACK_KNOCK_BACK_DISTANCE;
-
         // 计算击退方向
         int direction = enemy.getX() > getX() ? 1 : -1;
 
         // 计算击退后的位置
-        int x = enemy.getX() + distance * direction;
+        int x = enemy.getX() + ATTACK_KNOCK_BACK_DISTANCE * direction;
 
         // 限制击退后的位置
         if (x < 0) {

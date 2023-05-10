@@ -109,5 +109,10 @@ public class Config {
      */
     public static final int ATTACK_KNOCK_BACK_DISTANCE = 10;
 
+    /**
+     * 血条和蓝条的最大宽度
+     */
+    public static final int HP_MP_BAR_MAX_WIDTH = 200;
+
 
 }

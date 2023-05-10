@@ -291,26 +291,29 @@ public class Hero extends Sprite {
     public void control(char code){
 
         switch (code){
+            case 'W':
             case 'w':
                 moveUp();
                 break;
+            case 'S':
             case 's':
                 moveDown();
                 break;
+            case 'A':
             case 'a':
                 moveLeft();
                 break;
+            case 'D':
             case 'd':
                 moveRight();
                 break;
+            case 'J':
             case 'j':
                 attack();
                 break;
             case 'i':
+            case 'I':
                 releaseSkill();
-                break;
-            case 'l':
-                System.out.println("防御");
                 break;
 
         }
@@ -322,23 +325,28 @@ public class Hero extends Sprite {
      */
     public void drawHpAndMp(Graphics g){
 
+        BufferedImage head = Utils.loading("ikun/head.png");
+
+        g.drawImage(
+                head,
+                10,
+                10,
+                80,
+                80,
+                null
+        );
+
+        g.setColor(Color.WHITE);
+        g.drawRect(90, 20, HP_MP_BAR_MAX_WIDTH, 20);
+        g.drawRect(90, 50, HP_MP_BAR_MAX_WIDTH, 20);
+
         //绘制血量
         g.setColor(Color.RED);
-        g.fillRect(
-                getX() - getImageWidth()/2,
-                getY() - getImageHeight()/2 - 10,
-                (int)(getImageWidth() * getHp() / PLAYER_HP),
-                5
-        );
+        g.fillRect(90, 20, (int)(HP_MP_BAR_MAX_WIDTH * getHp() / PLAYER_HP), 20);
 
         //绘制蓝量
         g.setColor(Color.BLUE);
-        g.fillRect(
-                getX() - getImageWidth()/2,
-                getY() - getImageHeight()/2 - 5,
-                (int)(getImageWidth() * getMp() / PLAYER_MP_MAX),
-                5
-        );
+        g.fillRect(90, 50, (int)(HP_MP_BAR_MAX_WIDTH * getMp() / PLAYER_MP_MAX), 20);
 
     }
 
@@ -347,6 +355,8 @@ public class Hero extends Sprite {
         super.draw(g);
 
         drawHpAndMp(g);
+
+        drawAnger(g);
 
     }
 
@@ -360,14 +370,19 @@ public class Hero extends Sprite {
             return;
         }
 
-//        g.drawImage(
-//                ImageUtil.getImage("images/anger.png"),
-//                getX() - getImageWidth()/2 - 10,
-//                getY() - getImageHeight()/2 - 10,
-//                getImageWidth() + 20,
-//                getImageHeight() + 20,
-//                null
-//        );
+        BufferedImage angerImage = Utils.loading("boom.gif");
+
+        //设置透明度
+        Graphics2D g2d = (Graphics2D) g;
+
+        g.drawImage(
+                angerImage,
+                getX() - angerImage.getWidth()/2,
+                getY() - angerImage.getHeight()/2,
+                angerImage.getWidth()*2,
+                angerImage.getHeight()*2,
+                null
+        );
 
     }
 

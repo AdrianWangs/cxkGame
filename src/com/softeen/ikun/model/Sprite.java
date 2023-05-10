@@ -88,9 +88,12 @@ public abstract class Sprite {
     public abstract void destroy();
 
     public boolean isCollision(Sprite sprite) {
+
+
         if (sprite == null) {
             return false;
         }
+
 
         Rectangle r1 = new Rectangle(x, y, imageWidth, imageHeight);
         Rectangle r2 = new Rectangle(sprite.x, sprite.y, sprite.imageWidth, sprite.imageHeight);

@@ -3,6 +3,7 @@ package com.softeen.ikun.model;
 import com.softeen.ikun.GamePanel;
 import com.softeen.ikun.tools.Utils;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -93,9 +94,31 @@ public class Enemy extends Sprite implements Runnable{
 
     @Override
     public void run() {
+
+
+
         while (!isDeath()){
 
             setX(getX() - speed);
+
+
+
+            Hero hero = getGamePanel().hero;
+
+            if (hero.isCollision(this)) {
+                hero.setHp(hero.getHp()-Utils.randNum(20,100));
+                setDeath(true);
+            }
+
+            if (hero.getHp() <= 0) {
+
+                getGamePanel().timer.cancel();
+
+                JOptionPane.showMessageDialog(getGamePanel(), "游戏结束");
+                System.exit(0);
+            }
+
+
 
             if (getX() < getWidth()){
                 setDeath(true);
