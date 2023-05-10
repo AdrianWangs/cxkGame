@@ -7,6 +7,14 @@ import javazoom.jl.player.Player;
 
 public class MusicPlayer extends Thread{
 
+    public static String BG_MUSIC = "ikun.mp3";
+
+    public static String ATTACK_MUSIC = "attack.mp3";
+
+    public static String DIE_MUSIC = "die.mp3";
+
+    public static String SKILL_MUSIC = "skill1.mp3";
+
 
     Player player;
 
@@ -14,7 +22,7 @@ public class MusicPlayer extends Thread{
 
     String music;
 
-    MusicPlayer(String music, boolean loop, float volume){
+    public MusicPlayer(String music, boolean loop, float volume){
         this.loop = loop;
         this.music = music;
     }

@@ -32,7 +32,7 @@ public class Config {
     /**
      * 游戏窗口的背景音乐
      */
-    public static final String FRAME_MUSIC = "bg1.mp3";
+    public static final String FRAME_MUSIC = "ikun.mp3";
 
     /**
      * 游戏窗口的背景音乐是否循环播放
@@ -53,6 +53,61 @@ public class Config {
      * 玩家移动速度
      */
     public static final int PLAYER_SPEED = 15;
+
+    /**
+     * 攻击物发送速度
+     */
+    public static final int ATTACK_SPEED = 5;
+
+    /**
+     * 玩家默认血量
+     */
+    public static final int PLAYER_HP = 1000;
+
+    /**
+     * 玩家最大蓝量
+     */
+    public static final int PLAYER_MP_MAX = 100;
+
+    /**
+     * 敌人移动速度
+     */
+    public static final int ENEMY_SPEED = 2;
+
+    /**
+     * 敌人默认血量
+     */
+    public static final int ENEMY_HP = 100;
+
+    /**
+     * 敌人血条宽度
+     */
+    public static final int ENEMY_HP_WIDTH = 100;
+
+    /**
+     * 敌人血条高度
+     */
+    public static final int ENEMY_HP_HEIGHT = 10;
+
+    /**
+     * 敌人血条相对敌人的偏移横坐标
+     */
+    public static final int ENEMY_HP_X = 0;
+
+    /**
+     * 敌人血条相对敌人的偏移纵坐标
+     */
+    public static final int ENEMY_HP_Y = -20;
+
+    /**
+     * 释放技能时篮球的个数
+     */
+    public static final int BASKETBALL_NUM = 36;
+
+    /**
+     * 攻击击退距离
+     */
+    public static final int ATTACK_KNOCK_BACK_DISTANCE = 10;
 
 
 }

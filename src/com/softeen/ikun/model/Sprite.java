@@ -1,7 +1,10 @@
-package com.softeen.ikun;
+package com.softeen.ikun.model;
+
+import com.softeen.ikun.GamePanel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 /**
  * 精灵类
@@ -35,8 +38,11 @@ public abstract class Sprite {
     /**
      * 精灵的图片
      */
-    BufferedImage[] images;
+    List<BufferedImage> images;
 
+    /**
+     * 当前角色的图片
+     */
     BufferedImage img;
 
     /**
@@ -59,7 +65,15 @@ public abstract class Sprite {
      */
     public int imageHeight;
 
+    /**
+     * 其所在的游戏面板
+     */
     private GamePanel gamePanel;
+
+    /**
+     * 当前精灵对象是否死亡
+     */
+    private boolean death = false;
 
     Sprite(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -70,16 +84,23 @@ public abstract class Sprite {
 
     public abstract void update();
 
-    public abstract void draw();
 
     public abstract void destroy();
 
-    public void onCollision(Sprite sprite) {
+    public boolean isCollision(Sprite sprite) {
+        if (sprite == null) {
+            return false;
+        }
 
+        Rectangle r1 = new Rectangle(x, y, imageWidth, imageHeight);
+        Rectangle r2 = new Rectangle(sprite.x, sprite.y, sprite.imageWidth, sprite.imageHeight);
+
+
+        return r1.intersects(r2);
     }
 
 
-    public BufferedImage[] getImages() {
+    public List<BufferedImage> getImages() {
         return images;
     }
 
@@ -91,10 +112,10 @@ public abstract class Sprite {
         this.img = img;
     }
 
-    public void setImages(BufferedImage[] images) {
+    public void setImages(List<BufferedImage> images) {
         this.images = images;
-        imageCount = images.length;
-        img = images[0];
+        imageCount = images.size();
+        img = images.get(0);
     }
 
     public int getImageWidth() {
@@ -169,18 +190,34 @@ public abstract class Sprite {
         this.imageCount = imageCount;
     }
 
-    public void draw(Graphics g){
+    public boolean isDeath() {
+        return death;
+    }
+
+    public void setDeath(boolean death) {
+        this.death = death;
+    }
+
+
+    public void draw(Graphics g) {
         g.drawImage(img,x,y,imageWidth,imageHeight,null);
     }
 
 
+
+    /**
+     * 更新图片
+     */
     public void updateImage(){
+
         imageIndex++;
         if (imageIndex >= imageCount){
             imageIndex = 0;
         }
-        img = images[imageIndex];
+        img = images.get(imageIndex);
+
     }
+
 
 
 }

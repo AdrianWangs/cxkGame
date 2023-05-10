@@ -5,8 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Random;
 
 public class Utils {
 
@@ -32,5 +31,12 @@ public class Utils {
     public static FileInputStream getFileStream(String fileName) throws IOException {
         return new FileInputStream(Utils.class.getResource("/music/"+fileName).getFile());
     }
+
+
+    public static int randNum(int min, int max){
+        Random random = new Random();
+        return random.nextInt(max-min+1)+min;
+    }
+
 
 }
