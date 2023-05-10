@@ -34,6 +34,13 @@ public class Hero extends Sprite {
     int mp = 0;
 
     /**
+     * 移动方向
+     * true:向右
+     * false:向左
+     */
+    boolean direction = true;
+
+    /**
      * 向右移动的图片动画帧
      */
     List<BufferedImage> imagesRight;
@@ -115,6 +122,8 @@ public class Hero extends Sprite {
      */
     public void moveLeft(){
 
+        direction = false;
+
         if (images != imagesLeft){
             setImages(imagesLeft);
         }
@@ -134,6 +143,8 @@ public class Hero extends Sprite {
      * 向右移动
      */
     public void moveRight(){
+
+        direction = true;
 
         if (images != imagesRight){
             setImages(imagesRight);
@@ -184,6 +195,7 @@ public class Hero extends Sprite {
             return;
         }
 
+        //减少怒气值
         setMp(0);
 
 
@@ -195,7 +207,7 @@ public class Hero extends Sprite {
             Ball ball = new Ball(getGamePanel(),radius,getX(),getY(),Hero.this);
             balls.add(ball);
             //切换到攻击的图片动画帧
-            setImages(images == imagesRight ? attackRight : attackLeft);
+            setImages(direction ? attackRight : attackLeft);
 
             new Thread(ball).start();
         }
@@ -206,7 +218,7 @@ public class Hero extends Sprite {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                setImages(images == attackRight ? imagesRight : imagesLeft);
+                setImages(direction ? imagesRight : imagesLeft);
             }
         };
         timer.schedule(timerTask, 100);
@@ -238,11 +250,11 @@ public class Hero extends Sprite {
      */
     public void attack(){
 
-        Ball ball = new Ball(getGamePanel(),images == imagesRight,getX(),getY(),Hero.this);
+        Ball ball = new Ball(getGamePanel(),direction,getX(),getY(),Hero.this);
         balls.add(ball);
 
         //切换到攻击的图片动画帧
-        setImages(images == imagesRight ? attackRight : attackLeft);
+        setImages(direction ? attackRight : attackLeft);
 
         new Thread(ball).start();
 
@@ -251,7 +263,7 @@ public class Hero extends Sprite {
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                setImages(images == attackRight ? imagesRight : imagesLeft);
+                setImages(direction ? imagesRight : imagesLeft);
             }
         };
         timer.schedule(timerTask, 100);

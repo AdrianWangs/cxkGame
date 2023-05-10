@@ -114,5 +114,10 @@ public class Config {
      */
     public static final int HP_MP_BAR_MAX_WIDTH = 200;
 
+    /**
+     * 击败多少小兵进入下一关
+     */
+    public static final int MAX_ENEMY_COUNT = 10;
+
 
 }
