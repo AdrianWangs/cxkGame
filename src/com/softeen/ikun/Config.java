@@ -136,5 +136,15 @@ public class Config {
      */
     public static final int DROP_PROBABILITY = 3;
 
+    /**
+     * BOSS的血量
+     */
+    public static final int BOSS_HP = 10000;
+
+    /**
+     * BOSS移动速度
+     */
+    public static final int BOSS_SPEED = 5;
+
 
 }

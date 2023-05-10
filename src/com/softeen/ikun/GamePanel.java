@@ -1,5 +1,6 @@
 package com.softeen.ikun;
 
+import com.softeen.ikun.model.Boss;
 import com.softeen.ikun.model.Enemy;
 import com.softeen.ikun.model.Hero;
 import com.softeen.ikun.model.Prop;
@@ -49,6 +50,12 @@ public class GamePanel extends JPanel {
 
     public CopyOnWriteArrayList<Prop> props = new CopyOnWriteArrayList<>();
 
+
+    /**
+     * BOSS
+     */
+    public Boss boss;
+
     /**
      * 更新玩家图像
      */
@@ -70,7 +77,7 @@ public class GamePanel extends JPanel {
         public void run() {
 
             //如果击败的敌人数大于等于进入下一关的敌人数，则杀死当前页面的所有敌人,不再生成，并开放下一关
-            if (killCount >= MAX_ENEMY_COUNT) {
+            if (killCount >= MAX_ENEMY_COUNT * (mapIndex + 1)) {
                 allowNextMap = true;
                 enemies.forEach(enemy -> enemy.kill());
                 return;
@@ -81,6 +88,7 @@ public class GamePanel extends JPanel {
             enemies.add(enemy);
         }
     };
+
 
     public Timer timer = new Timer();
 
@@ -120,7 +128,15 @@ public class GamePanel extends JPanel {
 
 
         if (mapIndex == maps.length - 1) {
-            //TODO 进入BOSS关卡
+            //最后一关，不需要生成敌人
+            killCount = 0x7fffffff;
+            generateEnemyTask.cancel();
+
+            //生成BOSS
+            Boss boss = new Boss(GamePanel.this);
+            new Thread(boss).start();
+
+
         }
 
 
@@ -173,6 +189,11 @@ public class GamePanel extends JPanel {
         hero.balls.forEach(ball -> ball.draw(g));
         enemies.forEach(enemy -> enemy.draw(g));
         props.forEach(prop -> prop.draw(g));
+
+        //绘制BOSS
+        if (boss!=null && !boss.isDeath()){
+            boss.draw(g);
+        }
 
     }
 
