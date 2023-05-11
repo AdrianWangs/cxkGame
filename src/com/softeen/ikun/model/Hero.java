@@ -5,7 +5,6 @@ import com.softeen.ikun.Config;
 import com.softeen.ikun.GamePanel;
 import com.softeen.ikun.MusicPlayer;
 import com.softeen.ikun.tools.Utils;
-import jdk.jshell.execution.Util;
 
 import javax.swing.*;
 import java.awt.*;
@@ -373,10 +372,10 @@ public class Hero extends Sprite {
             case 'L':
                 blink();
                 break;
-            case 'U':
-            case 'u':
-                releaseSkill2();
-                break;
+//            case 'U':
+//            case 'u':
+//                releaseSkill2();
+//                break;
 
         }
 

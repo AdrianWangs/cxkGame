@@ -22,7 +22,7 @@ public class Config {
     /**
      * 游戏窗口的标题
      */
-    public static final String FRAME_TITLE = "三国战纪";
+    public static final String FRAME_TITLE = "三国战纪之我是ikun";
 
     /**
      * 游戏窗口的图标

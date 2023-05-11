@@ -181,8 +181,18 @@ public class GamePanel extends JPanel {
 
             @Override
             public void keyReleased(KeyEvent e) {
+
+
+                if (e.getKeyChar() == 'u' || e.getKeyChar() == 'U'){
+                    if (pressedKeys.contains('w') || pressedKeys.contains('W')){
+                        hero.releaseSkill2();
+                    }
+                }
+
                 //从按下的键集合中移除
                 pressedKeys.remove(e.getKeyChar());
+
+
             }
         });
 
