@@ -33,7 +33,7 @@ public class Config {
     /**
      * 游戏窗口的背景音乐
      */
-    public static final String FRAME_MUSIC = "ikun.mp3";
+    public static final String FRAME_MUSIC = "bg1.mp3";
 
     /**
      * 游戏窗口的背景音乐是否循环播放
@@ -53,7 +53,7 @@ public class Config {
     /**
      * 玩家移动速度
      */
-    public static final int PLAYER_SPEED = 15;
+    public static final int PLAYER_SPEED = 30;
 
     /**
      * 攻击物发送速度
@@ -69,6 +69,22 @@ public class Config {
      * 玩家最大蓝量
      */
     public static final int PLAYER_MP_MAX = 100;
+
+    /**
+     * 闪现耗蓝
+     */
+    public static final int FLASH_MP = 20;
+
+    /**
+     * 闪现距离
+     */
+    public static final int FLASH_DISTANCE = 200;
+
+    /**
+     * 技能耗蓝
+     */
+    public static final int SKILL_MP = 50;
+
 
     /**
      * 敌人移动速度
@@ -118,7 +134,7 @@ public class Config {
     /**
      * 击败多少小兵进入下一关
      */
-    public static final int MAX_ENEMY_COUNT = 10;
+    public static final int MAX_ENEMY_COUNT = 5;
 
     /**
      * 鸡腿加血的值
@@ -144,7 +160,43 @@ public class Config {
     /**
      * BOSS移动速度
      */
-    public static final int BOSS_SPEED = 5;
+    public static final int BOSS_SPEED = 1;
+
+    /**
+     * BOSS大招延迟攻击时间
+     */
+    public static final int BOSS_ATTACK_DELAY = 600;
+
+    /**
+     * BOSS闪现的概率（每一帧），越大越低
+     */
+    public static final int BOSS_BLINK_PROBABILITY = 500;
+
+    /**
+     * BOSS释放大招的概率（每一帧），越大越低
+     */
+    public static final int BOSS_ATTACK_PROBABILITY = 7;
+
+    /**
+     * BOSS攻击力
+     */
+    public static final int BOSS_ATTACK = 40;
+
+    /**
+     * 大招对小兵的伤害
+     */
+    public static final int SKILL_DAMAGE_ENEMY = 15;
+
+    /**
+     * 大招对Boss的百分比伤害
+     */
+    public static final float SKILL_DAMAGE_BOSS = 0.1f;
+
+    /**
+     * 大招对小兵的击退距离
+     */
+    public static final int SKILL_KNOCK_BACK_DISTANCE_ENEMY = 40;
+
 
 
 }

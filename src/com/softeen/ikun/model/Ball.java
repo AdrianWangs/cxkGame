@@ -3,8 +3,6 @@ package com.softeen.ikun.model;
 import com.softeen.ikun.GamePanel;
 import com.softeen.ikun.tools.Utils;
 
-import java.util.Random;
-
 import static com.softeen.ikun.Config.*;
 
 public class Ball extends Sprite implements Runnable{
@@ -119,13 +117,30 @@ public class Ball extends Sprite implements Runnable{
                 throw new RuntimeException(e);
             }
 
-
         }
         destroy();
     }
 
 
     public void onCollision(){
+
+        if (getGamePanel().boss != null){
+            if (this.isCollision(getGamePanel().boss)) {
+
+                //销毁篮球
+                setDeath(true);
+
+                getGamePanel().boss.setHp(getGamePanel().boss.getHp()-10);
+                if (getGamePanel().boss.getHp() <= 0) {
+                    getGamePanel().boss.setDeath(true);
+                }
+                hero.setMp(hero.getMp()+10);
+
+                return;
+
+            }
+        }
+
         getGamePanel().enemies.forEach(enemy -> {
             if (this.isCollision(enemy)) {
 
@@ -134,24 +149,7 @@ public class Ball extends Sprite implements Runnable{
                 setDeath(true);
 
                 enemy.setHp(enemy.getHp()-10);
-                if (enemy.getHp() <= 0) {
-
-                    getGamePanel().enemies.remove(enemy);
-                    getGamePanel().killCount++;
-
-
-                    int randomInt = Utils.randNum(0, DROP_PROBABILITY);
-
-                    //随机掉落道具
-                    if(randomInt == 1 || randomInt == 0){
-
-                        //随机生成粥和鸡腿
-                        Prop prop = new Prop(getGamePanel(),getX(),getY(),randomInt);
-                        getGamePanel().props.add(prop);
-                    }
-
-                }
-                hero.setMp(hero.getMp()+10);
+                hero.setMp(hero.getMp()+5);
             }
         });
     }

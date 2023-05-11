@@ -118,7 +118,7 @@ public abstract class Sprite {
     public void setImages(List<BufferedImage> images) {
         this.images = images;
         imageCount = images.size();
-        img = images.get(0);
+        img = images.get(imageIndex >= imageCount ? imageCount - 1 : imageIndex);
     }
 
     public int getImageWidth() {

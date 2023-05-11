@@ -1,10 +1,13 @@
 package com.softeen.ikun.model;
 
+
 import com.softeen.ikun.Config;
 import com.softeen.ikun.GamePanel;
 import com.softeen.ikun.MusicPlayer;
 import com.softeen.ikun.tools.Utils;
+import jdk.jshell.execution.Util;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -14,8 +17,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.softeen.ikun.Config.*;
-import static com.softeen.ikun.MusicPlayer.ATTACK_MUSIC;
-import static com.softeen.ikun.MusicPlayer.SKILL_MUSIC;
+import static com.softeen.ikun.MusicPlayer.*;
 
 /**
  * 英雄类
@@ -39,6 +41,11 @@ public class Hero extends Sprite {
      * false:向左
      */
     boolean direction = true;
+
+    /**
+     * 当前用户是否被冻住
+     */
+    boolean isFrozen = false;
 
     /**
      * 向右移动的图片动画帧
@@ -187,16 +194,19 @@ public class Hero extends Sprite {
 
 
     /**
-     * 用户释放大招
+     * 用户释放技能
      */
     public void releaseSkill() {
 
-        if (mp < PLAYER_MP_MAX){
+        if (mp < SKILL_MP){
             return;
         }
 
         //减少怒气值
-        setMp(0);
+        setMp(getMp()-SKILL_MP);
+
+
+        new Thread(new MusicPlayer(HERO_SKILL_MUSIC1,false)).start();
 
 
         //循环创建36个篮球，每个篮球的角度相差10度
@@ -223,24 +233,65 @@ public class Hero extends Sprite {
         };
         timer.schedule(timerTask, 100);
 
-
-
         MusicPlayer musicPlayer;
 
-        try {
-            musicPlayer = new MusicPlayer(
-                    SKILL_MUSIC,
-                    false,
-                    0.5f
-            );
+        new Thread(new MusicPlayer(HERO_SKILL_MUSIC1,false,0.95F)).start();
 
-            musicPlayer.start();
+    }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+
+    /**
+     * 释放技能2（大招）
+     * 全屏伤害
+     */
+    public void releaseSkill2(){
+
+
+        if (mp < PLAYER_MP_MAX){
+            return;
         }
 
+        //减少怒气值
+        setMp(0);
 
+
+        new Thread(new MusicPlayer(HERO_SKILL_MUSIC3,false,1f)).start();
+
+
+        //全屏播放gif动画
+        getGamePanel().imageIcon = Utils.loadGif("ikun/1.gif");
+        Timer timer = new Timer();
+
+        //每隔0.5秒减少一次敌人的血量
+        //BOSS是按照百分比减少血量
+        TimerTask harmEnemy = new TimerTask() {
+            @Override
+            public void run() {
+                getGamePanel().enemies.forEach(enemy -> {
+                    enemy.setHp(enemy.getHp()-SKILL_DAMAGE_ENEMY);
+                    //小兵击退效果
+                    enemy.setX(enemy.getX() + SKILL_KNOCK_BACK_DISTANCE_ENEMY);
+                });
+
+                if (getGamePanel().boss != null){
+                    getGamePanel().boss.setHp((int)(getGamePanel().boss.getHp() * (1-SKILL_DAMAGE_BOSS)));
+                }
+
+            }
+        };
+
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                getGamePanel().imageIcon = null;
+                timer.cancel();
+            }
+        };
+
+
+        timer.schedule(timerTask, 3000);
+        //每隔0.5秒一次伤害，持续3秒
+        timer.schedule(harmEnemy, 0, 500);
 
     }
 
@@ -268,22 +319,8 @@ public class Hero extends Sprite {
         };
         timer.schedule(timerTask, 100);
 
-        MusicPlayer musicPlayer;
 
-        try {
-            musicPlayer = new MusicPlayer(
-                ATTACK_MUSIC,
-                false,
-                0.5f
-            );
-
-            musicPlayer.start();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        //TODO 周围的敌人受到攻击
+        new Thread(new MusicPlayer(ATTACK_MUSIC, false,0.9F)).start();
 
     }
 
@@ -301,6 +338,11 @@ public class Hero extends Sprite {
      * @param code 键盘按键的编码
      */
     public void control(char code){
+
+        if (isFrozen){
+            return;
+        }
+
 
         switch (code){
             case 'W':
@@ -326,6 +368,14 @@ public class Hero extends Sprite {
             case 'i':
             case 'I':
                 releaseSkill();
+                break;
+            case 'l':
+            case 'L':
+                blink();
+                break;
+            case 'U':
+            case 'u':
+                releaseSkill2();
                 break;
 
         }
@@ -391,17 +441,20 @@ public class Hero extends Sprite {
 
     @Override
     public void draw(Graphics g) {
-        super.draw(g);
+
 
         drawHpAndMp(g);
 
         drawAnger(g);
 
+        drawFrozen(g);
+
+        super.draw(g);
     }
 
     /**
      * 怒气值满时，玩家周围出现金色的光圈
-     * @return
+     * @param g
      */
     public void drawAnger(Graphics g){
 
@@ -409,19 +462,48 @@ public class Hero extends Sprite {
             return;
         }
 
-        BufferedImage angerImage = Utils.loading("boom.gif");
+        BufferedImage angerImage = Utils.loading("fire.png");
+
+
 
         //设置透明度
         Graphics2D g2d = (Graphics2D) g;
 
-        g.drawImage(
+        // 将透明度设置为0.5
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f);
+        g2d.setComposite(alphaComposite);
+
+
+        g2d.drawImage(
                 angerImage,
-                getX() - angerImage.getWidth()/2,
-                getY() - angerImage.getHeight()/2,
-                angerImage.getWidth()*2,
-                angerImage.getHeight()*2,
+                getX(),
+                getY(),
+                getImageWidth(),
+                getImageHeight(),
                 null
         );
+
+        // 将透明度还原为正常状态
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+
+    }
+
+    /**
+     * 冻结图像
+     * @param g
+     */
+    public void drawFrozen(Graphics g){
+
+        //在用户图像所在矩形内部画一个居中的实心的透明度为50的蓝色内接圆
+        if (isFrozen){
+            g.setColor(new Color(0,0,255,50));
+            g.fillOval(
+                    getX() ,
+                    getY(),
+                    getImageWidth(),
+                    getImageHeight()
+            );
+        }
 
     }
 
@@ -435,8 +517,9 @@ public class Hero extends Sprite {
         this.hp = hp;
 
         if (hp <= 0){
-            //TODO 玩家死亡
-            System.out.println("玩家死亡");
+            getGamePanel().timer.cancel();
+            JOptionPane.showMessageDialog(getGamePanel(), "Loser!");
+            System.exit(0);
         }
 
         if (hp > PLAYER_HP){
@@ -462,7 +545,30 @@ public class Hero extends Sprite {
 
     }
 
+    public void setFrozen(boolean frozen) {
+        isFrozen = frozen;
+    }
 
+    /**
+     * 坤坤闪现
+     */
+    public void blink(){
 
+        //判断蓝量是否足够
+        if (mp < FLASH_MP){
+            return;
+        }
+        setMp(mp - FLASH_MP);
+
+        new Thread(new MusicPlayer(HERO_SKILL_MUSIC2,false, 1F)).start();
+
+        //判断方向
+        if (direction){
+            setX(getX() + FLASH_DISTANCE);
+        }else {
+            setX(getX() - FLASH_DISTANCE);
+        }
+
+    }
 
 }

@@ -20,8 +20,6 @@ public class GamePanel extends JPanel {
 
 
 
-
-
     //消灭敌人的数量
     public int killCount = 0;
 
@@ -50,6 +48,8 @@ public class GamePanel extends JPanel {
 
     public CopyOnWriteArrayList<Prop> props = new CopyOnWriteArrayList<>();
 
+    public ImageIcon imageIcon;
+
 
     /**
      * BOSS
@@ -64,7 +64,9 @@ public class GamePanel extends JPanel {
         public void run() {
             hero.updateImage();
             enemies.forEach(enemy-> enemy.updateImage());
-
+            if (boss != null) {
+                boss.updateImage();
+            }
             repaint();
         }
     };
@@ -91,6 +93,7 @@ public class GamePanel extends JPanel {
 
 
     public Timer timer = new Timer();
+    public Timer generateEnemyTimer = new Timer();
 
 
     /**
@@ -111,6 +114,8 @@ public class GamePanel extends JPanel {
      */
     public void nextMap(){
 
+
+
         if(mapIndex >= maps.length - 1){
             return;
         }
@@ -126,20 +131,30 @@ public class GamePanel extends JPanel {
 
         mapIndex++;
 
+        if (mapIndex == maps.length-1) {
 
-        if (mapIndex == maps.length - 1) {
             //最后一关，不需要生成敌人
             killCount = 0x7fffffff;
-            generateEnemyTask.cancel();
 
-            //生成BOSS
-            Boss boss = new Boss(GamePanel.this);
-            new Thread(boss).start();
+            allowNextMap = false;
 
+            generateEnemyTimer.cancel();
+            enemies.forEach(enemy -> enemy.kill());
+
+            generateBoss();
 
         }
 
 
+    }
+
+    /**
+     * 创建BOSS
+     */
+    private void generateBoss() {
+        //生成BOSS
+        boss = new Boss(GamePanel.this);
+        new Thread(boss).start();
     }
 
 
@@ -172,7 +187,7 @@ public class GamePanel extends JPanel {
         });
 
         timer.schedule(updateHeroTask, 0, 100);
-        timer.schedule(generateEnemyTask, 0, 1000);
+        generateEnemyTimer.schedule(generateEnemyTask, 0, 1000);
 
         //设置焦点
         setFocusable(true);
@@ -185,15 +200,24 @@ public class GamePanel extends JPanel {
         Image img = Utils.loading(maps[mapIndex]);
         g.drawImage(img, 0, 0, FRAME_WIDTH, FRAME_HEIGHT, null);
 
-        hero.draw(g);
-        hero.balls.forEach(ball -> ball.draw(g));
-        enemies.forEach(enemy -> enemy.draw(g));
-        props.forEach(prop -> prop.draw(g));
+
+        //正在释放技能
+        if (imageIcon!=null){
+            g.drawImage(imageIcon.getImage(),0,0,FRAME_WIDTH,FRAME_HEIGHT,null);
+        }
 
         //绘制BOSS
         if (boss!=null && !boss.isDeath()){
             boss.draw(g);
         }
+
+        hero.draw(g);
+        hero.balls.forEach(ball -> ball.draw(g));
+        enemies.forEach(enemy -> enemy.draw(g));
+        props.forEach(prop -> prop.draw(g));
+
+
+
 
     }
 

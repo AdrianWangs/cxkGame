@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.softeen.ikun.Config.*;
@@ -122,6 +121,11 @@ public class Enemy extends Sprite implements Runnable{
 
     public void setHp(int hp) {
         this.hp = hp;
+
+        if (hp <= 0){
+            kill();
+        }
+
     }
 
 
@@ -137,19 +141,23 @@ public class Enemy extends Sprite implements Runnable{
             setDeath(true);
         }
 
-        if (hero.getHp() <= 0) {
-
-            getGamePanel().timer.cancel();
-
-            JOptionPane.showMessageDialog(getGamePanel(), "游戏结束");
-            System.exit(0);
-        }
-
     }
 
 
     public void kill() {
+        getGamePanel().killCount++;
         setDeath(true);
+
+        int randomInt = Utils.randNum(0, DROP_PROBABILITY);
+
+        //随机掉落道具
+        if(randomInt == 1 || randomInt == 0){
+
+            //随机生成粥和鸡腿
+            Prop prop = new Prop(getGamePanel(),getX(),getY(),randomInt);
+            getGamePanel().props.add(prop);
+        }
+
     }
 
 

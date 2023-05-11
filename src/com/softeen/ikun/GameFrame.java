@@ -59,9 +59,7 @@ public class GameFrame extends JFrame {
 
     public void setMusic(){
         // 设置窗口背景音乐
-        MusicPlayer musicPlayer = new MusicPlayer(FRAME_MUSIC, FRAME_MUSIC_LOOP, FRAME_MUSIC_VOLUME);
-
-
+        MusicPlayer musicPlayer = new MusicPlayer(FRAME_MUSIC, FRAME_MUSIC_LOOP);
         musicPlayer.start();
 
     }
