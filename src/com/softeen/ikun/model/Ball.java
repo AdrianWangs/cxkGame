@@ -96,6 +96,16 @@ public class Ball extends Sprite implements Runnable{
 
 
         while (!isDeath()){
+            try {
+                Thread.sleep(1000/60);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (getGamePanel().pause){
+                continue;
+            }
+
             setX(getX() + speed_x);
             setY(getY() + speed_y);
 
@@ -111,17 +121,16 @@ public class Ball extends Sprite implements Runnable{
                 setDeath(true);
             }
 
-            try {
-                Thread.sleep(1000/60);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+
 
         }
         destroy();
     }
 
 
+    /**
+     * 碰撞检测
+     */
     public void onCollision(){
 
         if (getGamePanel().boss != null){

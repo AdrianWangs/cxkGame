@@ -50,6 +50,8 @@ public class GamePanel extends JPanel {
 
     public ImageIcon imageIcon;
 
+    public boolean pause = false;
+
 
     /**
      * BOSS
@@ -77,6 +79,11 @@ public class GamePanel extends JPanel {
     TimerTask generateEnemyTask = new TimerTask() {
         @Override
         public void run() {
+
+            if (pause){
+                return;
+            }
+
 
             //如果击败的敌人数大于等于进入下一关的敌人数，则杀死当前页面的所有敌人,不再生成，并开放下一关
             if (killCount >= MAX_ENEMY_COUNT * (mapIndex + 1)) {
@@ -131,7 +138,7 @@ public class GamePanel extends JPanel {
 
         mapIndex++;
 
-        if (mapIndex == maps.length-1) {
+        if (mapIndex ==2){
 
             //最后一关，不需要生成敌人
             killCount = 0x7fffffff;
@@ -142,7 +149,6 @@ public class GamePanel extends JPanel {
             enemies.forEach(enemy -> enemy.kill());
 
             generateBoss();
-
         }
 
 
@@ -157,7 +163,6 @@ public class GamePanel extends JPanel {
         new Thread(boss).start();
     }
 
-
     GamePanel(){
 
         setBackground(Color.GREEN);
@@ -170,18 +175,23 @@ public class GamePanel extends JPanel {
             public void keyPressed(KeyEvent e) {
 
 
+                if (e.getKeyChar() == ' '){
+                    setPause(!pause);
+                }
+
                 //添加到按下的键集合
                 pressedKeys.add(e.getKeyChar());
 
                 pressedKeys.forEach(key->{
-                    hero.control(key);
+                    if (!pause){
+                        hero.control(key);
+                    }
                 });
 
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-
 
                 if (e.getKeyChar() == 'u' || e.getKeyChar() == 'U'){
                     if (pressedKeys.contains('w') || pressedKeys.contains('W')){
@@ -191,7 +201,6 @@ public class GamePanel extends JPanel {
 
                 //从按下的键集合中移除
                 pressedKeys.remove(e.getKeyChar());
-
 
             }
         });
@@ -206,10 +215,14 @@ public class GamePanel extends JPanel {
 
     @Override
     public void paint(Graphics g) {
+
+
+
+
         super.paint(g);
+
         Image img = Utils.loading(maps[mapIndex]);
         g.drawImage(img, 0, 0, FRAME_WIDTH, FRAME_HEIGHT, null);
-
 
         //正在释放技能
         if (imageIcon!=null){
@@ -226,11 +239,26 @@ public class GamePanel extends JPanel {
         enemies.forEach(enemy -> enemy.draw(g));
         props.forEach(prop -> prop.draw(g));
 
+        if (pause){
+            // 设置字体颜色和字体大小
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("宋体", Font.BOLD, 50));
+            // 获取提示信息的宽度
+            FontMetrics fm = g.getFontMetrics();
+            int textWidth = fm.stringWidth("游戏暂停，按空格键继续游戏");
+            // 居中显示提示信息
+            int x = (FRAME_WIDTH - textWidth) / 2;
+            int y = FRAME_HEIGHT / 2;
+            // 绘制提示信息
+            g.drawString("游戏暂停，按空格键继续游戏", x, y);
+        }
 
 
 
     }
 
+    public void setPause(boolean pause) {
+        this.pause = pause;
 
-
+    }
 }

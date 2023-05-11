@@ -131,11 +131,14 @@ public class Boss extends Sprite implements Runnable {
 
         while (!isDeath()) {
 
-
             try {
                 Thread.sleep(1000/60);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
+            }
+
+            if (getGamePanel().pause){
+                continue;
             }
 
             Hero hero = getGamePanel().hero;

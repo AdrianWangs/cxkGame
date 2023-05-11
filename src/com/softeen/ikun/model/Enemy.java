@@ -98,6 +98,16 @@ public class Enemy extends Sprite implements Runnable{
 
         while (!isDeath()){
 
+            try {
+                Thread.sleep(1000/60);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (getGamePanel().pause){
+                continue;
+            }
+
             setX(getX() - speed);
 
             onAttacked();
@@ -106,11 +116,7 @@ public class Enemy extends Sprite implements Runnable{
                 setDeath(true);
             }
 
-            try {
-                Thread.sleep(1000/60);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+
         }
         destroy();
     }
